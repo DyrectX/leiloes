@@ -2,7 +2,8 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+
+      
 
 
 
@@ -16,18 +17,30 @@ import javax.swing.JOptionPane;
  * @author Adm
  */
 public class conectaDAO {
-    
-    public Connection connectDB(){
-        Connection conn = null;
-        
+    private static Connection conn;
+     
+    public static Connection getConnection() {
         try {
-        
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=");
-            
-        } catch (SQLException erro){
-            JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
+            if (conn == null || conn.isClosed()) {
+                String url = "jdbc:mysql://localhost:3306/uc11?serverTimezone=America/Sao_Paulo";
+                String user = "root";
+                String password = "di240304DI!";
+                conn = DriverManager.getConnection(url, user, password);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erro ao conectar: " + ex.getMessage());
         }
         return conn;
     }
-    
+
+    public void desconectar() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erro ao desconectar: " + ex.getMessage());
+        }
+    }
 }
+   
