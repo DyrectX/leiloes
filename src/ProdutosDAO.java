@@ -13,21 +13,20 @@ import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.SQLException;
-import java.math.BigInteger;
 
 public class ProdutosDAO {
 
     Connection conn;
     PreparedStatement ps;
-    ResultSet resultset;
-    ArrayList<ProdutosDTO> listagem = new ArrayList<>();
+    ResultSet rs;
+    ArrayList<ProdutosDTO> listaP = new ArrayList<>();
+    
 
     public int cadastrarProduto(ProdutosDTO produto) {
         int status;
 
         try {
             Connection conn = conectaDAO.getConnection();
-            
 
             ps = conn.prepareStatement("INSERT INTO produtos VALUES(?, ?, ?, ?)");
             ps.setInt(1, produto.getId());
@@ -46,9 +45,34 @@ public class ProdutosDAO {
 
     }
 
-    public ArrayList<ProdutosDTO> listarProdutos() {
+    public ArrayList<ProdutosDTO> listarProdutos(String listaProduto) {
+        String sql = "SELECT * from produtos";
 
-        return listagem;
+        try {
+            conectaDAO cdao = new conectaDAO();
+            conn = cdao.getConnection();
+
+            ps = this.conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            ArrayList<ProdutosDTO> listaP = new ArrayList<>();
+
+            while (rs.next()) {
+                ProdutosDTO pdto = new ProdutosDTO();
+
+                pdto.setId(rs.getInt("id"));
+                pdto.setNome(rs.getString("nome"));
+                pdto.setStatus(rs.getString("status"));
+                pdto.setValor(rs.getInt("valor"));
+
+                listaP.add(pdto);
+            }
+            return listaP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 }
