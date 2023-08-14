@@ -25,7 +25,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     public void preencherTabela(String listaProduto) {
         conectaDAO cdao = new conectaDAO();
         ProdutosDAO pdao = new ProdutosDAO();
-        
+
         boolean sts = cdao.getConnection() != null;
 
         if (!sts) {
@@ -84,7 +84,7 @@ public class listagemVIEW extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "ID", "Nome", "Valor", "Status"
+                "ID", "Nome", "Status", "Valor"
             }
         ));
         jScrollPane1.setViewportView(listaProdutos);
@@ -174,15 +174,18 @@ public class listagemVIEW extends javax.swing.JFrame {
         ProdutosDAO produtosdao = new ProdutosDAO();
 
         //produtosdao.venderProduto(Integer.parseInt(id));
-        
+
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
-        //vendasVIEW vendas = new vendasVIEW(); 
-        //vendas.setVisible(true);
+        Vendas vendas = new Vendas();
+        vendas.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        cadastroVIEW cad = new cadastroVIEW();
+        cad.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 

@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ProdutosDAO {
 
@@ -74,19 +75,47 @@ public class ProdutosDAO {
 
     }
 
-    public int venderProduto(ProdutosDTO p) {
-        int status;
-        try {
-            ps = conn.prepareCall("UPDATE produtos SET status = 'Vendido' WHERE id = ?");
-            ps.setInt(1, p.getId());
-            ps.setString(2, p.getStatus());
-            status = ps.executeUpdate();
-            return status;
-        } catch (SQLException ex) {
-            System.out.println(ex.getErrorCode());
-            return ex.getErrorCode();
-        }
+    public ArrayList<ProdutosDTO> listarProdutosVendidos(String produtoVendido) {
+        String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
 
+        try {
+            conectaDAO cdao = new conectaDAO();
+            conn = cdao.getConnection();
+
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            List<ProdutosDTO> listaProdutos = new ArrayList<>();
+
+            while (rs.next()) {
+                ProdutosDTO produto = new ProdutosDTO();
+                produto.setId(rs.getInt("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setStatus(rs.getString("status"));
+                produto.setValor(rs.getInt("valor"));
+                listaProdutos.add(produto);
+            }
+
+            return (ArrayList<ProdutosDTO>) listaProdutos;
+        } catch (SQLException ex) {
+            System.out.println("Erro ao conectar: " + ex.getMessage());
+            return null;
+        }
     }
 
+    public void venderProduto(int produtoId) {
+        conn = conectaDAO.getConnection();
+
+        try {
+            String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, produtoId);
+            ps.executeUpdate();
+
+            System.out.println("Produto vendido com sucesso!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao vender o produto: " + e.getMessage());
+        }
+    }
 }
