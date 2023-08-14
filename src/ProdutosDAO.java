@@ -20,7 +20,6 @@ public class ProdutosDAO {
     PreparedStatement ps;
     ResultSet rs;
     ArrayList<ProdutosDTO> listaP = new ArrayList<>();
-    
 
     public int cadastrarProduto(ProdutosDTO produto) {
         int status;
@@ -71,6 +70,21 @@ public class ProdutosDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+
+    }
+
+    public int venderProduto(ProdutosDTO p) {
+        int status;
+        try {
+            ps = conn.prepareCall("UPDATE produtos SET status = 'Vendido' WHERE id = ?");
+            ps.setInt(1, p.getId());
+            ps.setString(2, p.getStatus());
+            status = ps.executeUpdate();
+            return status;
+        } catch (SQLException ex) {
+            System.out.println(ex.getErrorCode());
+            return ex.getErrorCode();
         }
 
     }
